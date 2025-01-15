@@ -1,0 +1,52 @@
+#+TITLE: GNU Emacs Configuration
+#+AUTHOR: N. G. Scheurich
+#+EMAIL: nick@scheurich.haus
+#+PROPERTY: header-args :tangle ./init.el
+
+* Preface
+This is my personal *GNU Emacs* configuration. It’s an [[https://orgmode.org/][Org Mode]]
+document written in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] style, with text meant for
+computer interpretation, i.e. /code/, intermingled with plain-language
+text meant to be parsed by humans. I find that this paradigm works
+nicely here, as it allows me to colocate my thoughts about parts of
+the setup alongside the Emacs Lisp (Elisp) code itself.
+
+From a technical perspective, when this file is written to disk, each
+code block in the document is /tangled/ (exported using to a file
+using ~org-babel-tangle~). Most blocks are exported to the default
+Emacs initialization file, =init.el=. This process is elaborated on
+further in the [[*Configuration Tangling][Configuration Tangling]] section.
+
+** Inspiration & Reference
+Configuring Emacs can be quite the journey and, if not for amazing
+prior art and community support, I may not have set foot on the
+road. From the official manual to [[https://www.reddit.com/r/emacs/][r/emacs]], there is a wealth of
+support out there for the budding Emacs user. I’d like to call out a
+few particularly helpful folks and resources:
+
+- [[https://github.com/daviwil/emacs-from-scratch][Emacs from Scratch]], a video series and config by [[https://daviwil.com/][David Wilson]] of [[https://youtube.com/c/SystemCrafters][System Crafters]]
+- Words, spoken and written, by [[https://protesilaos.com/emacs/][Protesilaos Stavrou]], aka /Prot/
+- [[https://www.masteringemacs.org/][Mastering Emacs]], a book and blog series by [[https://www.masteringemacs.org/about][Mickey Petersen]]
+- [[https://github.com/jasonmj/.emacs.d][Configuration]] by and conversation with [[https://github.com/jasonmj][Jason Johnson]]
+
+Lastly, thanks to [[https://github.com/jkwascom][Joshua Wascom]], whose mentorship helped me understand
+the value of investing in customizable, well-integrated tools.
+
+* Configuration Tangling
+The following code defines a function that checks whether we are
+currently visiting a buffer for this file (that is to say, the
+=config.org= file in ~user-emacs-directory~) and, if so, tangles each
+code block in the file. It also attaches a hook to ~after-save-hook~
+to call the function after the buffer is saved.
+
+#+begin_src emacs-lisp
+  (defun ngs-org-babel-tangle-config ()
+    (message "Hello")
+    (when (string-equal (buffer-file-name)
+			(file-name-concat (expand-file-name user-emacs-directory) "README.org"))
+	(org-babel-tangle)))
+
+  (add-hook 'org-mode-hook (lambda ()
+     (add-hook 'after-save-hook #'ngs-org-babel-tangle-config)))
+#+end_src
+

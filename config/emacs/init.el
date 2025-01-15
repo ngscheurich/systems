@@ -1,18 +1,8 @@
-;;; GNU Emacs initialization
+(defun ngs-org-babel-tangle-config ()
+  (message "Hello")
+  (when (string-equal (buffer-file-name)
+		      (file-name-concat (expand-file-name user-emacs-directory) "README.org"))
+      (org-babel-tangle)))
 
-(add-to-list 'load-path (locate-user-emacs-file "ngs-lisp"))
-
-(require 'ngs-env)
-(require 'ngs-core)
-
-(require 'ngs-buffers)
-(require 'ngs-complete)
-(require 'ngs-edit)
-(require 'ngs-git)
-(require 'ngs-help)
-(require 'ngs-minibuf)
-(require 'ngs-navigate)
-(require 'ngs-prog)
-(require 'ngs-shell)
-(require 'ngs-snippets)
-(require 'ngs-theme)
+(add-hook 'org-mode-hook (lambda ()
+   (add-hook 'after-save-hook #'ngs-org-babel-tangle-config)))
